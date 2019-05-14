@@ -14,6 +14,16 @@ html
     body
         block content
             .uk-container
-                .errors.uk-alert-warning.uk-hidden(uk-alert)
-                .psychics
-                .guesses
+                .errors.uk-margin.uk-alert-warning.uk-hidden(uk-alert)
+                div.uk-margin Список экстрасенсов
+                    .psychics
+                div.uk-margin Догадки экстрасенсов
+                    .guesses
+
+                .uk-margin
+                    form#form
+                        .start
+                            button.uk-button.uk-button-default start
+                        .answer.uk-hidden
+                            input(type="number" min="10" max="99")
+                            button.uk-button.uk-button-default Правильный ответ
