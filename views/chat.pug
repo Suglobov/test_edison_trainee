@@ -1,0 +1,14 @@
+doctype html
+html
+    head
+        title Chat Application
+    body
+        h1 Welcome to the chat application
+        div(class="messages-wrapper")
+            ul(id="message-container")
+        div(class="input-wrapper")
+            form(id="chat")
+                div
+                    label write message
+                    input(type="text" placeholder="Enter message" id="chat-message" name="chat-message")
+        script(src="/js/ws.js")
