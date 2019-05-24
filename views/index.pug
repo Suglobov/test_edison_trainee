@@ -14,16 +14,22 @@ html
     body
         block content
             .uk-container
+                .preloader.uk-text-center.uk-margin
+                    .uk-align-center.uk-display-inline-block(uk-spinner="ratio: 2")
                 .errors.uk-margin.uk-alert-warning.uk-hidden(uk-alert)
                 div.uk-margin Список экстрасенсов
-                    .psychics
+                    .psychicsContainer.uk-child-width-1-3.uk-grid-small.uk-grid-match(uk-grid)
                 div.uk-margin Догадки экстрасенсов
-                    .guesses
-
+                    .guessesContainer.uk-child-width-1-3.uk-grid-small.uk-grid-match(uk-grid)
                 .uk-margin
-                    form#form
-                        .start
-                            button.uk-button.uk-button-default start
-                        .answer.uk-hidden
-                            input(type="number" min="10" max="99")
-                            button.uk-button.uk-button-default Правильный ответ
+                    .start
+                        button.uk-button.uk-button-default загадал число, жду догадок
+                    form#form.uk-hidden
+                        .answer
+                            fieldset.uk-fieldset
+                                .uk-margin
+                                    legend.uk-legend Введите загаданное число
+                                .uk-margin
+                                    input.uk-input(type="number" min="10" max="99" required="" name="number")
+                                .uk-margin
+                                    button.uk-button.uk-button-default Правильный ответ
