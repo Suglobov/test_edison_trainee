@@ -9,34 +9,14 @@ const port = config.get('server.port');
 const portWs = config.get('server.portWs');
 
 
-import Psychic from './psychic.js'; // экстрасенсы
-const psychics = [
-    new Psychic('Ы', 10),
-    new Psychic('2', 11),
-    new Psychic('Синий', 12, () => {
-        const arr = [10, 22, 33, 33, 50, 78];
-        const rand = Psychic.randomInteger(0, arr.length - 1);
-        return arr[rand];
-    }),
-];
-
-// console.log(psychics[0].toString());
-// console.log(psychics[0].valueOf());
-// psychics[0].rating = 1;
-// console.log(psychics[0].rating);
-// console.log(psychics[1].id);
-// psychics[0].ratingIncrement();
-// console.log(psychics[0].rating);
-// psychics[0].ratingDecrease();
-// console.log(psychics[0].rating);
-// console.log(psychics[1].rating);
+import psychics from '../app/psychics/curent.js'; // экстрасенсы
 
 const ms = { // сообщения
     error: {
-        wrongFormat: JSON.stringify({ error: 'не верный формат. json ожидается' }),
+        wrongFormat: { error: 'не верный формат. json ожидается' },
         onInvalidTransition: (transition, from, to) =>
-            JSON.stringify({ error: `${transition} not allowed ${from} ${to} state` }),
-        wrongNumber: JSON.stringify({ error: 'число должно быть 2х значное' }),
+            ({ error: `${transition} not allowed ${from} ${to} state` }),
+        wrongNumber: { error: 'число должно быть 2х значное' },
     },
 };
 
@@ -50,13 +30,15 @@ const broadcast = (data) => {
     });
 };
 wss.on('connection', (ws) => {
-    // console.log(ws);
+    const wsJsonSend = (data) => {
+        const jsonData = JSON.stringify(data);
+        ws.send(jsonData);
+    };
     let guesses = [];
     const fsm = new StateMachine({
         /*
         beginning - отправляем рейтинг, ждем запроса догадок
         guess - догадки отправлены, ждем правильный ответ
-        answer - получили ответ, возвращаем все в начало
         */
         init: 'begin',
         transitions: [
@@ -65,20 +47,20 @@ wss.on('connection', (ws) => {
         ],
         methods: {
             onBegin: function () {
-                ws.send(JSON.stringify({
-                    'psychics': psychics.map(el => el.valueOf()),
+                wsJsonSend({
+                    'psychics': psychics.valueOf(),
                     state: this.state,
-                }));
+                });
             },
             onGuess: function () {
-                guesses = psychics.map(el => el.guess());
-                ws.send(JSON.stringify({
+                guesses = psychics.guesses();
+                wsJsonSend({
                     'guesses': guesses,
                     state: this.state,
-                }));
+                });
             },
             onInvalidTransition: (transition, from, to) => {
-                ws.send(ms.error.onInvalidTransition(transition, from, to));
+                wsJsonSend(ms.error.onInvalidTransition(transition, from, to));
             },
         }
     });
@@ -88,7 +70,7 @@ wss.on('connection', (ws) => {
         try {
             msg = JSON.parse(message);
         } catch (e) {
-            ws.send(ms.error.wrongFormat);
+            wsJsonSend(ms.error.wrongFormat);
             return;
         }
 
@@ -97,20 +79,11 @@ wss.on('connection', (ws) => {
         }
         if (msg.answer !== undefined) {
             if (msg.answer >= 10 && msg.answer < 100) {
-                const nb = Number(msg.answer);
-                const winIndex = guesses.indexOf(Number(msg.answer));
-                psychics.forEach((gu, index) => {
-                    if (winIndex === index) {
-                        gu.ratingIncrement();
-                    } else {
-                        gu.ratingDecrease();
-                    }
-                });
-                broadcast({ 'psychics': psychics.map(el => el.valueOf()) });
+                psychics.recalcRating(msg.answer, guesses);
+                broadcast({ 'psychics': psychics.valueOf() });
                 fsm.toBegin();
-                console.log(winIndex);
             } else {
-                ws.send(ms.error.wrongNumber);
+                wsJsonSend(ms.error.wrongNumber);
             }
         }
         // console.log(message, wss.clients);

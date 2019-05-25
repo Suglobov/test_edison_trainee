@@ -19,6 +19,7 @@ const storage = { // сюда сохранятся всякие объекты
     },
     dom: {}, // элементы, которые надо найти на странице
     errors: (er) => {
+        console.log(er);
         if (!storage.dom.errors) return;
         const erElem = document.createElement('div');
         storage.dom.errors.appendChild(erElem);
@@ -121,7 +122,14 @@ const webSockerConnect = () => new Promise((resolve, reject) => {
         console.log('WebSocket connection established');
         storage.dom.preloader.classList.add(storage.sl.cl.uikit.hidden);
     };
-    ws.onclose = () => {
+    ws.onclose = (event) => {
+        if (event.wasClean) {
+            console.log('Соединение закрыто чисто');
+        } else {
+            console.log('Обрыв соединения'); // например, "убит" процесс сервера
+        }
+        console.log('Код: ' + event.code + ' причина: ' + event.reason);
+        console.log(event);
         storage.errors(storage.ms.lostConnection);
     };
     ws.onmessage = (event) => {
