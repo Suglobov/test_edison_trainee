@@ -2,10 +2,11 @@
   "name": "test_edison_trainee",
   "version": "1.0.0",
   "description": "",
-  "main": "server/server.js",
+  "main": "indexNode.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": " npx nodemon --exec npx babel-node --presets=@babel/env ./server/server.js"
+    "server": "npx nodemon --exec npx babel-node --presets=@babel/env ./app/indexNode.js",
+    "webpack": "npx webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -18,17 +19,20 @@
   },
   "homepage": "https://github.com/Suglobov/test_edison_trainee#readme",
   "dependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/node": "^7.2.2",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
     "config": "^3.1.0",
     "express": "^4.16.4",
     "javascript-state-machine": "^3.1.0",
     "nodemon": "^1.19.0",
     "pug": "^2.0.3",
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.4",
-    "@babel/node": "^7.2.2",
-    "@babel/preset-env": "^7.4.4",
     "ws": "^7.0.0"
   },
   "devDependencies": {
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2"
   }
 }

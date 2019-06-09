@@ -1,3 +1,5 @@
+"babel": "npx babel assets/src/js --out-dir assets/js --presets=@babel/env",
+
 # Задание
 EDISON Software Development Centre
 http://www.edsd.ru
