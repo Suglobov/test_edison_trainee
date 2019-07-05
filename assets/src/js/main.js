@@ -20,7 +20,7 @@ const putOnPage = (arr, name) => {
 };
 
 const webSockerConnect = () => new Promise((resolve, reject) => {
-    const ws = new WebSocket('ws://localhost:81');
+    const ws = new WebSocket('ws://192.168.0.104:81');
     ws.onerror = (error) => {
         // console.log('WebSocket connection error');
         reject(error);

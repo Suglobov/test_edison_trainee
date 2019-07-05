@@ -21,21 +21,24 @@ if (!webSocketServer.broadcastJson) {
     };
 }
 
-export default (cdConnect, cbMessage, cbError, cbClose) => {
-    webSocketServer.on('connection', (client) => {
-        cdConnect(client);
-        client.on('message', (msgJson) => {
-            try {
-                const messageObj = JSON.parse(msgJson);
-                cbMessage(client, messageObj);
-            } catch (err) {
-                cbError(client, err);
-            }
-        });
-        client.on('close', () => {
-            cbClose(client);
-        });
-    });
+export const wss = webSocketServer;
 
-    return webSocketServer;
+export const onConnect = (cb) => {
+    webSocketServer.on('connection', (client) => {
+        cb(client);
+    });
+};
+
+export const listenClient = (client, cbMessage, cbClose, cbMessageError) => {
+    client.on('message', (msgJson) => {
+        try {
+            const messageObj = JSON.parse(msgJson);
+            cbMessage(messageObj);
+        } catch (er) {
+            cbMessageError(er);
+        }
+    });
+    client.on('close', () => {
+        cbClose();
+    });
 };

@@ -43,7 +43,7 @@ export class Psychic {
     }
 }
 
-let clentsMap = new Map();
+let clientsMap = new Map();
 
 export class Psychics {
     constructor(arrProp) {
@@ -56,12 +56,12 @@ export class Psychics {
 
     guesses(client) {
         const guesses = this.psychics.map(el => el.guess());
-        clentsMap.set(client, guesses);
+        clientsMap.set(client, guesses);
         return guesses;
     }
 
     recalcRating(client, answer) {
-        const guesses = clentsMap.get(client);
+        const guesses = clientsMap.get(client);
         const winIndex = guesses.indexOf(Number(answer));
         this.psychics.forEach((ps, index) => {
             if (winIndex === index) {
@@ -73,20 +73,6 @@ export class Psychics {
     }
 
     deleteClientMap(client) {
-        clentsMap.delete(client);
+        clientsMap.delete(client);
     }
 }
-
-const psychics = new Psychics([
-    { name: 'Ы', rating: 1, photoPath: 'images/Ы.jpg' },
-    { name: '2', rating: 2, photoPath: 'images/2.jpg' },
-    {
-        name: 'Синий', rating: 3, photoPath: 'images/123.jpg', guess: () => {
-            const arr = [10, 22, 33, 33, 50, 78];
-            const rand = Psychic.randomInteger(0, arr.length - 1);
-            return arr[rand];
-        }
-    },
-]);
-
-export default psychics;
