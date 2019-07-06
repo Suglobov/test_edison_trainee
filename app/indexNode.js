@@ -1,4 +1,3 @@
-require('./server/serverHtml');
 import { wss, onConnect, listenClient } from './server/servetWebSocet';
 import ms from './message'; // сообщения
 import psychics from './psychics/index.js'; // экстрасенсы

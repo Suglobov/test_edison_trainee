@@ -1,8 +1,10 @@
 import WebSocket from 'ws';
 import config from 'config';
 
-const PORT = process.env.PORT || config.get('server.portWs');
-const webSocketServer = new WebSocket.Server({ port: PORT });
+import app from './serverHtml';
+
+// const PORT = process.env.PORT || config.get('server.portWs');
+const webSocketServer = new WebSocket.Server(app);
 
 if (!webSocketServer.sendJson) {
     webSocketServer.sendJson = (client, data) => {
