@@ -3,7 +3,7 @@ import path from 'path';
 import config from 'config';
 
 const rootPath = process.cwd();
-const port = config.get('server.port');
+const PORT = process.env.PORT || config.get('server.port');
 const app = express();
 
 app.set('view engine', 'pug');
@@ -14,6 +14,6 @@ app.get('/', function (req, res) {
     res.render('index');
 });
 
-app.listen(port, function () {
-    console.log(`Server was started on port '${port}'`);
+app.listen(PORT, function () {
+    console.log(`Server was started on port '${PORT}'`);
 });
