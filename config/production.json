@@ -1,6 +1,5 @@
 {
   "server": {
-    "port": 5000,
-    "portWs": 5000
+    "port": 5000
   }
 }

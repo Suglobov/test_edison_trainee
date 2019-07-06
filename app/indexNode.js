@@ -9,15 +9,23 @@ onConnect((client) => {
     });
     listenClient(client,
         (message) => {
-            console.log(message);
-            if (message.step === 'toGuess') {
+            if (message.step === 'toGuess') { // клиент хочет получить догадки
                 let guesses = psychics.guesses(client);
                 wss.sendJson(client, {
                     guesses: guesses,
                     state: 'guess',
                 });
             }
-            if (message.step === 'toAnswer') {
+            if (message.step === 'toAnswer') { // прислали правильный ответ (загаданное число)
+                const answer = +message.answer;
+                console.log(message);
+                if (!(answer >= 10 && answer <= 99)) {
+                    wss.sendJson(client, {
+                        error: ms.er.wrongNumber,
+                        er: ms.er.wrongNumber,
+                    });
+                    return;
+                }
                 psychics.recalcRating(client, message.answer);
                 wss.broadcastJson({
                     psychics: psychics.valueOf(),
@@ -27,10 +35,10 @@ onConnect((client) => {
                 });
             }
         },
-        () => {
+        () => { // очищаем переменные при закрытии соединения
             psychics.deleteClientMap(client);
         },
-        (er) => {
+        (er) => { // если формат сообщения не json
             wss.sendJson(client, {
                 error: ms.er.wrongFormat,
                 er,

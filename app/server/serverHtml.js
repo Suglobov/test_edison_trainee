@@ -14,8 +14,4 @@ app.get('/', function (req, res) {
     res.render('index');
 });
 
-app.listen(PORT, function () {
-    console.log(`Server was started on port '${PORT}'`);
-});
-
 export default app;

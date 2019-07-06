@@ -1,10 +1,16 @@
+import http from 'http';
 import WebSocket from 'ws';
-// import config from 'config';
+import config from 'config';
+
 import app from './serverHtml';
 
+const PORT = process.env.PORT || config.get('server.port');
+const server = http.createServer(app);
+const webSocketServer = new WebSocket.Server({ server });
 
-// const PORT = process.env.PORT || config.get('server.portWs');
-const webSocketServer = new WebSocket.Server({ server: app });
+server.listen(PORT, function () {
+    console.log(`Server was started on port '${PORT}'`);
+});
 
 if (!webSocketServer.sendJson) {
     webSocketServer.sendJson = (client, data) => {

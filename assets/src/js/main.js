@@ -20,7 +20,7 @@ const putOnPage = (arr, name) => {
 };
 
 const webSockerConnect = () => new Promise((resolve, reject) => {
-    const HOST = location.origin.replace(/^http/, 'ws')
+    const HOST = location.origin.replace(/^https?/, 'ws');
     const ws = new WebSocket(HOST);
     ws.onerror = (error) => {
         // console.log('WebSocket connection error');
@@ -49,17 +49,13 @@ const webSockerConnect = () => new Promise((resolve, reject) => {
         storage.state[state] && storage.state[state]();
     };
     storage.dom.startButton.addEventListener('click', () => {
-        // ws.send('storage.ms.toGuess');
         ws.send(storage.ms.toGuess);
+        // ws.send('storage.ms.toGuess');
     });
     storage.dom.form.addEventListener('submit', (event) => {
         event.preventDefault();
         ws.send(storage.ms.toAnswer(form.elements.number.value));
-        //     const textInput = document.getElementById('chat-message');
-        //     const chatText = textInput.value;
-        //     textInput.value = '';
-        //     console.log(chatText);
-        //     ws.send(chatText);
+        // ws.send(JSON.stringify({ step: 'toAnswer', answer: 1 }));
     });
 });
 
