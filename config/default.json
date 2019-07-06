@@ -1,6 +1,6 @@
 {
   "server": {
     "port": 80,
-    "portWs": 81
+    "portWs": 80
   }
 }

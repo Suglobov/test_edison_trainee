@@ -20,7 +20,8 @@ const putOnPage = (arr, name) => {
 };
 
 const webSockerConnect = () => new Promise((resolve, reject) => {
-    const ws = new WebSocket('ws://127.0.0.1:81');
+    const HOST = location.origin.replace(/^http/, 'ws')
+    const ws = new WebSocket(HOST);
     ws.onerror = (error) => {
         // console.log('WebSocket connection error');
         reject(error);
